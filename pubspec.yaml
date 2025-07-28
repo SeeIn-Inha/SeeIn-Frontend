@@ -12,7 +12,10 @@ dependencies:
   cupertino_icons: ^1.0.8
   dio: ^5.0.0
   flutter_tts: ^3.6.3
+  http: ^1.2.1
   camera: ^0.10.0+1
+  image_picker: ^1.1.2
+
 
 
 
