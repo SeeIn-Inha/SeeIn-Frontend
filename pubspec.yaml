@@ -13,6 +13,7 @@ dependencies:
   dio: ^5.0.0
   flutter_tts: ^3.6.3
   camera: ^0.10.0+1
+  provider: ^6.1.5
 
 
 
@@ -27,3 +28,14 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/fonts/
+
+  fonts:
+    - family: Pretendard
+      fonts:
+        - asset: assets/fonts/Pretendard-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Pretendard-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Pretendard-Bold.ttf
+          weight: 700
