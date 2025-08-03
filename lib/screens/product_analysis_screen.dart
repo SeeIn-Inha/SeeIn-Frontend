@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,7 +9,9 @@ import 'package:http/http.dart' as http;
 /// - 이미지 업로드 → FastAPI 서버에서 상품 분석 및 요약 결과 받기
 /// - 분석 결과 기반으로 '살까 말까' 추천까지 제공
 class ProductAnalysisScreen extends StatefulWidget {
-  const ProductAnalysisScreen({super.key});
+  final XFile? image; // 카메라 촬영 후 전달받는 이미지 (선택사항)
+
+  const ProductAnalysisScreen({super.key, this.image});
 
   @override
   State<ProductAnalysisScreen> createState() => _ProductAnalysisScreenState();
@@ -23,6 +25,14 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
 
   // 분석 완료 여부
   bool _isAnalyzed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.image != null) {
+      _analyzeImageWithAPI(widget.image!);
+    }
+  }
 
   ///  이미지 업로드 → 서버 분석 요청
   Future<void> _analyzeImageWithAPI(XFile image) async {
