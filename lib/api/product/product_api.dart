@@ -3,7 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class ProductApiClient {
-  //.env로 API_BASE_UR 관리. ipcconfig 사용
+  //.env로 API_BASE_UR 관리. ipcconfig 사용해서 개별로.
   static final String baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://localhost:8000';
 
   /// 테스트용 자산 이미지로 분석 요청
