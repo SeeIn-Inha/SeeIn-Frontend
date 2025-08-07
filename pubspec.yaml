@@ -30,5 +30,5 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
-#    - .env
+    - .env
     - assets/images/test_product.png
