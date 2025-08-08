@@ -11,8 +11,7 @@ class Regist_API {
     required String email,
   }) async {
     final uri = Uri.parse('$baseUrl/auth/register');
-    print(uri);
-    final response = await http.post(
+    final res = await http.post(
         uri,
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
@@ -22,12 +21,23 @@ class Regist_API {
         })
     );
 
-    if (response.statusCode != 200) {
-      return ({"success": false, "body": "잠시 후 다시 시도해 주세요"});
+    Map<String, dynamic>? result = null;
+
+    if (res.statusCode != 200) {
+      result =
+        ({
+        'success': false,
+        'body': '회원가입 실패',
+        });
+    } else {
+      result =
+        ({
+        'success': true,
+        'body': '회원가입 성공',
+        });
     }
 
-    // final data = json.decode(response.body);
-    return ({'success': true});
+    return result!;
   }
 
 }

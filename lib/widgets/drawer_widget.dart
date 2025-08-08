@@ -28,7 +28,7 @@ class Menu extends StatelessWidget {
           ),
           onTap: () {
             // 홈으로 이동
-            Navigator.pushReplacementNamed(context, RoutePage.home);
+            Navigator.pushReplacementNamed(context, RoutePage.start);
           }
         ),
         ListTile(
@@ -44,7 +44,7 @@ class Menu extends StatelessWidget {
             onTap: () {
               // 앱 핵심 기능 카메라 페이지로 이동
               // 페이지 추후 개발
-              Navigator.pushReplacementNamed(context, RoutePage.home);
+              Navigator.pushReplacementNamed(context, RoutePage.start);
             }
         ),
         // Border(
@@ -66,7 +66,7 @@ class Menu extends StatelessWidget {
             onTap: () {
               // 앱 사용 설명으로 이동
               // 페이지 추후 개발
-              Navigator.pushReplacementNamed(context, RoutePage.home);
+              Navigator.pushReplacementNamed(context, RoutePage.start);
             }
         ),
         ListTile(
@@ -82,7 +82,7 @@ class Menu extends StatelessWidget {
             onTap: () {
               // 피드백으로 이동
               // 페이지 추후 개발
-              Navigator.pushReplacementNamed(context, RoutePage.home);
+              Navigator.pushReplacementNamed(context, RoutePage.start);
             }
         ),
         ListTile(
@@ -98,7 +98,7 @@ class Menu extends StatelessWidget {
             onTap: () {
               // 도움말로 이동
               // 페이지 추후 개발
-              Navigator.pushReplacementNamed(context, RoutePage.home);
+              Navigator.pushReplacementNamed(context, RoutePage.start);
             }
         ),
       ],  // Children End
