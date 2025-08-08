@@ -19,14 +19,12 @@ class Login_API {
       )
     );
 
-    if (res.statusCode != 200) {
-      return ({"success": false, "body": "이메일 또는 비밀번호를 확인해주세요"});
-    }
+    Map<String, dynamic>? result = json.decode(res.body);
 
-    // final data = json.decode(res.body);
-    return ({
-      'success': true,
-      'body': 'login is success, move to home'
-    });
+    if (res.statusCode != 200) {
+      return ({'success': false, 'body': '회원가입 실패',});
+     }
+
+    return result!;
   }
 }

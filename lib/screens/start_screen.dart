@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import '../routes/router.dart';
 
 // 초기 화면
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class StartScreen extends StatefulWidget {
+  const StartScreen({super.key});
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<StartScreen> createState() => _StartScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _StartScreenState extends State<StartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

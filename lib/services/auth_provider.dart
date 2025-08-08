@@ -39,16 +39,18 @@ class AuthProvider extends ChangeNotifier {
 
     notifyListeners();
   }
-
-  Future<void> saveToken(String token, int expireHours) async {
+  // , int expireMinutes
+  Future<void> saveToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
 
     _token = token;
-    _expiry = DateTime.now().add(Duration(hours: expireHours));
+    // _expiry = DateTime.now().add(Duration(minutes: expireMinutes));
 
     await prefs.setString('token', _token!);
-    await prefs.setString('toekn_expiry', _expiry!.toIso8601String());
-
+    // await prefs.setString('toekn_expiry', _expiry!.toIso8601String());
+    print("토큰 저장 완료");
+    print("토큰: " + prefs.getString('token').toString());
+    // print("유효기간: " + prefs.getString('token_expiry').toString());
     notifyListeners();
   }
 }
