@@ -6,7 +6,7 @@ import '../main.dart';
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final mainState = Provider.of<MainAppContext>(context);
+    // final mainState = Provider.of<MainAppContext>(context);
 
     return Scaffold(
       appBar: AppBar(

@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.seein.team3.seein_frontend"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     ndkVersion = "27.0.12077973"
 
 
