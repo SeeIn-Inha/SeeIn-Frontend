@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:seein_frontend/screens/select_home_screen.dart';
 import 'services/auth_provider.dart';
 import 'routes/router.dart';
 
@@ -109,5 +108,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-class MainAppContext extends ChangeNotifier {}

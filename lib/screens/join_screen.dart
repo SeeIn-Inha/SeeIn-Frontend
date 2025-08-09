@@ -11,17 +11,17 @@ class JoinPage extends StatefulWidget {
 }
 
 class _JoinPageState extends State<JoinPage> {
-  final TextEditingController _id = TextEditingController();
+  final TextEditingController _nick = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _passwordCheck = TextEditingController();
   final TextEditingController _email = TextEditingController();
 
-  final FocusNode _idFocus = FocusNode();
+  final FocusNode _nickFocus = FocusNode();
   final FocusNode _pwFocus = FocusNode();
   final FocusNode _pwCheck = FocusNode();
   final FocusNode _emailFocus = FocusNode();
 
-  bool _isIdFocused = false;
+  bool _isNickFocused = false;
   bool _isPwFocused = false;
   bool _isPwChecked = false;
   bool _isSamePw = false;
@@ -31,9 +31,9 @@ class _JoinPageState extends State<JoinPage> {
   void initState() {
     super.initState();
 
-    _idFocus.addListener(() {
+    _nickFocus.addListener(() {
       setState(() {
-        _isIdFocused = _idFocus.hasFocus;
+        _isNickFocused = _nickFocus.hasFocus;
       });
     });
 
@@ -71,7 +71,7 @@ class _JoinPageState extends State<JoinPage> {
 
   @override
   void dispose() {
-    _idFocus.dispose();
+    _nickFocus.dispose();
     _pwFocus.dispose();
     _pwCheck.dispose();
     super.dispose();
@@ -118,13 +118,13 @@ class _JoinPageState extends State<JoinPage> {
                       ],
                     ),
                   ),
-                  // ------------------------------------아이디-------------------------------------------
+                  // ------------------------------------닉네임-------------------------------------------
                   SizedBox(height: 10),
                   Container(
                     alignment: Alignment.centerLeft,
                     padding: EdgeInsets.only(left: 50),
                     child: Text(
-                      '아이디',
+                      '닉네임',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),  // 아이디 레이블
@@ -133,13 +133,13 @@ class _JoinPageState extends State<JoinPage> {
                     width: 300,
                     height: 60,
                     child: TextField(
-                      controller: _id,
-                      focusNode: _idFocus,
+                      controller: _nick,
+                      focusNode: _nickFocus,
                       minLines: null,
                       maxLines: 1,
                       style: Theme.of(context).textTheme.titleMedium,
                       decoration: InputDecoration(
-                        hintText: '아이디를 입력하세요',
+                        hintText: '닉네임을 입력하세요',
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(width: 1, color: Colors.black),
@@ -151,7 +151,7 @@ class _JoinPageState extends State<JoinPage> {
                       ),
                     ),
                   ), // 아이디 입력 컨테이너
-                  if (_isIdFocused)
+                  if (_isNickFocused)
                     Padding(
                         padding: EdgeInsets.only(top: 8.0),
                         child: Text(
@@ -285,13 +285,13 @@ class _JoinPageState extends State<JoinPage> {
                       onPressed: () async {
                         print("회원가입 버튼 클릭");
 
-                        Map<String, bool>? invalidResult = Regist.invalidData(_id.text, _password.text, _email.text);
+                        Map<String, bool>? invalidResult = Regist.invalidData(_nick.text, _password.text, _email.text);
                         if (invalidResult == null) {
                           return;
                         }
 
-                        if (invalidResult[_id.text] == false) {
-                          makeSnackBar(context, "아이디 형식이 올바르지 않습니다");
+                        if (invalidResult[_nick.text] == false) {
+                          makeSnackBar(context, "닉네임 형식이 올바르지 않습니다");
                           return;
                         }
 
@@ -310,7 +310,7 @@ class _JoinPageState extends State<JoinPage> {
                           return;
                         }
                         Regist_API registerManager = Regist_API();
-                        Map<String, dynamic> result = await registerManager.register(id:_id.text, pw:_password.text, email:_email.text);
+                        Map<String, dynamic> result = await registerManager.register(nick:_nick.text, pw:_password.text, email:_email.text);
                         if (result['success'] == false) {
                           makeSnackBar(context, ("회원가입 실패 원인: " + result["body"]));
                           return;
@@ -324,7 +324,7 @@ class _JoinPageState extends State<JoinPage> {
                           ),
                         ).closed
                             .then((_) {
-                          _id.clear();
+                          _nick.clear();
                           _password.clear();
                           _passwordCheck.clear();
                           _email.clear();
@@ -409,7 +409,7 @@ class _JoinPageState extends State<JoinPage> {
                           SizedBox(width: 10),
                           GestureDetector(
                               onTap: () {
-                                _id.clear();
+                                _nick.clear();
                                 _password.clear();
                                 _passwordCheck.clear();
                                 Navigator.pushNamed(context, RoutePage.login);

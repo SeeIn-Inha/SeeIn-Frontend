@@ -8,13 +8,10 @@ class AuthProvider extends ChangeNotifier {
   String? get token => _token;
   bool get isLoggedIn => _token != null;
   bool get isTokenValid {
-    if (_token == null || _expiry == null) return false;
+    if (_token == null || _expiry == null) {
+      return false;
+    }
     return DateTime.now().isBefore(_expiry!);
-  }
-
-  void setToken(String token) {
-    _token = token;
-    notifyListeners();
   }
 
   void clearToken() async {
