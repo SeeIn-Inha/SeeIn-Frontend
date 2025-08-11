@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:text_divider/text_divider.dart';
-import '../widgets/drawer_widget.dart';
-import '../routes/router.dart';
-import '../services/register.dart';
-import '../api/user/register_api.dart';
+import '../../widgets/drawer_widget.dart';
+import '../../routes/router.dart';
+import '../../services/register.dart';
+import '../../api/user/register_api.dart';
 
 class JoinPage extends StatefulWidget {
   @override
@@ -287,6 +287,7 @@ class _JoinPageState extends State<JoinPage> {
 
                         Map<String, bool>? invalidResult = Regist.invalidData(_nick.text, _password.text, _email.text);
                         if (invalidResult == null) {
+                          print("잘못됨~");
                           return;
                         }
 

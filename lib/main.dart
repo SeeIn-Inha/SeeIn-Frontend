@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'services/auth_provider.dart';
+import 'services/user_provider.dart';
 import 'routes/router.dart';
 
 // screen참고 testhome =영수증, product_analysis가 상품분석. select home임의로 만들어놓음.
@@ -15,6 +16,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthProvider>.value(value: providerManager),
+        ChangeNotifierProvider<UserProvider>.value(value: UserProvider()),
       ],
       child: MyApp(),
     ),

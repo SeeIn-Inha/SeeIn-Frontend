@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../screens/start_screen.dart';
-import '../screens/join_screen.dart';
-import '../screens/login_screen.dart';
+import '../screens/users/join_screen.dart';
+import '../screens/users/login_screen.dart';
 import '../screens/camera_auto_analysis_screen.dart';
 import '../screens/select_home_screen.dart';
 
@@ -12,6 +12,7 @@ class RoutePage {
   static const String camera = '/camera';
   static const String join = '/join';
   static const String login = '/login';
+  static const String select = '/select';
 
   // screens/...
   static final Map<String, WidgetBuilder> appRoutes = {
