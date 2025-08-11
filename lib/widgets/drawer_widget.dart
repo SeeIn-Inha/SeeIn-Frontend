@@ -126,6 +126,7 @@ class Menu extends StatelessWidget {
               ScaffoldMessenger.of(context)
                   .showSnackBar(
                     SnackBar(
+                      backgroundColor: Colors.white,
                       content: Text("로그인 후 이용하실 수 있습니다!"),
                       duration: Duration(seconds: 1),
                     ),
