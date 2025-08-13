@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 import 'package:seein_frontend/screens/select_home_screen.dart';
+import 'routes/router.dart';
+import 'services/auth_provider.dart';
+import 'services/user_provider.dart';
 // screen참고 testhome =영수증, product_analysis가 상품분석. select home임의로 만들어놓음.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  runApp(const MyApp());
+
+  final authProvider = AuthProvider();
+  await authProvider.loadToken();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthProvider>.value(value: authProvider),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -30,7 +46,9 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const SelectHomeScreen(),
+      // home: const SelectHomeScreen(),
+      initialRoute: RoutePage.start,
+      routes: RoutePage.appRoutes,
     );
   }
 }
