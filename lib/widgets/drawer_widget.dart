@@ -24,6 +24,7 @@ class Menu extends StatelessWidget {
     }
 
     bool _isGuest = (_nickname == "비로그인 사용자" || _email == "Non-Email");
+    print("[로그인 사용자 상태 확인] - 사용자: ${_nickname}, 이메일: ${_email}, 로그인 여부: ${_isGuest}");
     return ListView(
       padding: EdgeInsets.zero,
       children: [
@@ -70,7 +71,7 @@ class Menu extends StatelessWidget {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            // Navigator.pushReplacementName(context, RoutePage.myInfo);
+                            Navigator.pushReplacementNamed(context, RoutePage.myInfo);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF2F3A8F),
@@ -84,7 +85,7 @@ class Menu extends StatelessWidget {
                         ElevatedButton(
                           onPressed: () {
                             // userManager.clearUserData();
-                            // Navigator.pushReplacementName(context, RoutePage.start);
+                            // Navigator.pushReplacementNamed(context, RoutePage.start);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF2F3A8F),
