@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 final String baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://localhost:8000';
 
 class Login_API {
-  Future<Map<String, dynamic?>> login(
+  Future<Map<String, dynamic>> login(
       {required email, required pw}) async {
     final Uri uri = Uri.parse('$baseUrl/auth/login');
 
@@ -19,12 +19,12 @@ class Login_API {
       )
     );
 
-    Map<String, dynamic>? result = json.decode(res.body);
+    Map<String, dynamic> result = json.decode(res.body);
 
     if (res.statusCode != 200) {
       return ({'success': false, 'body': '회원가입 실패',});
-     }
+    }
 
-    return result!;
+    return result;
   }
 }

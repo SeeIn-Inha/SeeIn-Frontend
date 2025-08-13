@@ -1,66 +1,61 @@
 import 'package:flutter/material.dart';
 import '../routes/router.dart';
+import '../services/auth_provider.dart';
+import '../services/user_provider.dart';
+import 'package:provider/provider.dart';
+import '../config/appTheme.dart';
 
 // 초기 화면
-class StartScreen extends StatefulWidget {
+class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
-  @override
-  State<StartScreen> createState() => _StartScreenState();
-}
 
-class _StartScreenState extends State<StartScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = AppTheme.lightTheme;
+    final w = MediaQuery.of(context).size.width;
+    final h = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-            child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Image.asset('assets/icons/SEE-IN-Logo-rmbg.png', width: 100, height: 100,),
-              // SizedBox(height: 10),
-              Text(
-                  'SEE IN',
-                  style: Theme.of(context).textTheme.headlineLarge,
-              ),
-              SizedBox(height: 5),
-              Text('시각장애인을 위한 스마트 정보 읽기 앱',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              SizedBox(height: 15,),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  fixedSize: Size(300, 30),
-                ),
-                onPressed: () {
-                  // 로그인 화면 전환
-                  Navigator.pushNamed(context, RoutePage.login);
-                },
-                child: Text('로그인', style: Theme.of(context).textTheme.labelLarge,),
-              ),
-              SizedBox(height: 8,),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  fixedSize: Size(300, 30),
-                ),
-                onPressed: () {
-                  // 회원 가입 화면 전환
-                  Navigator.pushNamed(context, RoutePage.join);
-                },
-                child: Text('회원가입', style: Theme.of(context).textTheme.labelLarge,),
-              ),
-              SizedBox(height: 12),
-              Text(
-                '카메라로 제품이나 영수증을 촬영하면',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              Text(
-                '음성으로 정보를 읽어드립니다',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ],
-          ),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: _buildVerticalLayout(context, w, h, theme)
+    );
+  }
+
+  Widget _buildVerticalLayout(BuildContext context, double w, double h, ThemeData theme) {
+    return Center(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: w * 0.08),
+        child: Column(
+          children: [
+            Text('SEE IN', style: theme.textTheme.displayMedium),
+            SizedBox(height: h * 0.01),
+            Text('시각장애인을 위한 스마트 정보 읽기 앱', style: theme.textTheme.bodyMedium, textAlign: TextAlign.center),
+            SizedBox(height: h * 0.02),
+            _buildButton(context, '로그인', w, theme),
+            SizedBox(height: h * 0.012),
+            _buildButton(context, '회원가입', w, theme),
+            SizedBox(height: h * 0.02),
+            Text('카메라로 제품이나 영수증을 촬영하면', style: theme.textTheme.bodyMedium),
+            Text('음성으로 정보를 읽어드립니다', style: theme.textTheme.bodyMedium),
+          ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildButton(BuildContext context, String label, double width, ThemeData theme) {
+    return SizedBox(
+      width: width < 600 ? width * 0.8 : width,
+      child: ElevatedButton(
+        onPressed: () {
+          if (label == "로그인") {
+            Navigator.pushNamed(context, RoutePage.login);
+          } else {
+            Navigator.pushNamed(context, RoutePage.join);
+          }
+        },
+        style: theme.elevatedButtonTheme.style,
+        child: Text(label, style: theme.textTheme.labelLarge),
       ),
     );
   }

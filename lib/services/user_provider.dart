@@ -7,6 +7,7 @@ class UserProvider extends ChangeNotifier {
   void setUserData(Map<String, dynamic>? data) {
     // api로 요청한 내 정보 저장
     if (data == null) {
+      print("[UserProvider]: 사용자 정보가 비어있음.");
       return;
     }
 
