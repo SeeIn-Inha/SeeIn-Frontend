@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../api/user/register_api.dart';
-import '../widgets/common_widgt.dart';
+import '../widgets/common_widget.dart';
 import '../routes/router.dart';
 
 final RegExp _usernameReg = RegExp(r'^[a-zA-Z0-9가-힣 ]{2,20}$');

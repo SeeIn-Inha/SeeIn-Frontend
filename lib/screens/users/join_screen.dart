@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/drawer_widget.dart';
 import '../../routes/router.dart';
-import '../../widgets/common_widgt.dart';
+import '../../widgets/common_widget.dart';
 import 'package:seein_frontend/config/appTheme.dart';
 
 class JoinPage extends StatefulWidget {

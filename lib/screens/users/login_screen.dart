@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:seein_frontend/config/appTheme.dart';
 import '../../widgets/drawer_widget.dart';
-import '../../widgets/common_widgt.dart';
+import '../../widgets/common_widget.dart';
+import '../../routes/router.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -38,7 +39,22 @@ class _LoginPageState extends State<LoginPage> {
           SizedBox(height: h * 0.01),
           widgetMaker.buildInputField(ctx, '비밀번호', _pw, _pwFocus, theme),
           SizedBox(height: h * 0.04,),
-          widgetMaker.buildElavatedButton(ctx, '로그인', _email, _pw, null, null, theme)
+          widgetMaker.buildElavatedButton(ctx, '로그인', _email, _pw, null, null, theme),
+          SizedBox(height: h * 0.02,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('비밀번호를 잊으셨나요?', style: theme.textTheme.bodyMedium,),
+              SizedBox(width: w * 0.02),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(ctx, RoutePage.login);
+                },
+                child: Text('비밀번호 찾기', style: theme.textTheme.bodyMedium,),
+              )
+            ],
+          ),
+          SizedBox(height: h * 0.1,)
         ],
       ),
     );

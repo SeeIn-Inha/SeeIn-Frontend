@@ -7,6 +7,8 @@ class AuthProvider extends ChangeNotifier {
   DateTime? _expiry;
   String? get token => _token;
   bool get isLoggedIn => _token != null;
+  bool get isFirstLogin => _token == null && _expiry == null;
+  bool get isTokenExpired => !isTokenValid && _token != null;
   bool get isTokenValid {
     if (_token == null || _expiry == null) {
       return false;
@@ -14,40 +16,42 @@ class AuthProvider extends ChangeNotifier {
     return DateTime.now().isBefore(_expiry!);
   }
 
-  void clearToken() async {
-    _token = null;
-    _expiry = null;
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-    await prefs.remove('token_expiry');
+    void clearToken() async {
+      _token = null;
+      _expiry = null;
 
-    notifyListeners();
-  }
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('token');
+      await prefs.remove('token_expiry');
 
-  Future<void> loadToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    _token = prefs.getString('token');
-    final expiryString = prefs.getString('token_expiry');
-
-    if (expiryString != null) {
-      _expiry = DateTime.tryParse(expiryString);
+      notifyListeners();
     }
 
-    notifyListeners();
-  }
-  // , int expireMinutes
-  Future<void> saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
+    Future<void> loadToken() async {
+      final prefs = await SharedPreferences.getInstance();
+      _token = prefs.getString('token');
+      final expiryString = prefs.getString('token_expiry');
 
-    _token = token;
-    // _expiry = DateTime.now().add(Duration(minutes: expireMinutes));
+      if (expiryString != null) {
+        _expiry = DateTime.tryParse(expiryString);
+      }
 
-    await prefs.setString('token', _token!);
-    // await prefs.setString('toekn_expiry', _expiry!.toIso8601String());
-    print("토큰 저장 완료");
-    print("토큰: " + prefs.getString('token').toString());
-    // print("유효기간: " + prefs.getString('token_expiry').toString());
-    notifyListeners();
-  }
+      notifyListeners();
+    }
+    // , int expireMinutes
+    Future<void> saveToken(String token) async {
+      final prefs = await SharedPreferences.getInstance();
+
+      _token = token;
+      // _expiry = DateTime.now().add(Duration(minutes: expireMinutes));
+
+      await prefs.setString('token', _token!);
+      // await prefs.setString('toekn_expiry', _expiry!.toIso8601String());
+      print("토큰 저장 완료");
+      print("토큰: " + prefs.getString('token').toString());
+      // print("유효기간: " + prefs.getString('token_expiry').toString());
+      notifyListeners();
+    }
+
 }

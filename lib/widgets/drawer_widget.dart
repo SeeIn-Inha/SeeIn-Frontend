@@ -2,165 +2,156 @@ import 'package:flutter/material.dart';
 import '../routes/router.dart';
 import '../services/user_provider.dart';
 import 'package:provider/provider.dart';
+import '../config/appTheme.dart';
 
 class Menu extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    final UserProvider userManager = context.read<UserProvider>();
+  Widget build(BuildContext ctx) {
+    final w = MediaQuery.of(ctx).size.width;
+    final h = MediaQuery.of(ctx).size.height;
+    final theme = AppTheme.lightTheme;
+    final UserProvider userManager = ctx.read<UserProvider>();
 
-    String _nickname = "";
+    String _username = "";
     String _email = "";
 
     if (userManager.username != null) {
-      _nickname = userManager.username!;
+      _username = userManager.username!;
     } else {
-      _nickname = "비로그인 사용자";
+      _username = "비로그인 사용자";
     }
-
     if (userManager.email != null) {
       _email = userManager.email!;
     } else {
       _email = "Non-Email";
     }
+    bool _isGuest = (_username == "비로그인 사용자" || _email == "Non-Email");
 
-    bool _isGuest = (_nickname == "비로그인 사용자" || _email == "Non-Email");
-    print("[로그인 사용자 상태 확인] - 사용자: ${_nickname}, 이메일: ${_email}, 로그인 여부: ${_isGuest}");
-    return ListView(
-      padding: EdgeInsets.zero,
-      children: [
-        Container(
-          // alignment: Alignment.center,
-          height: 250,
-          color: Theme.of(context).primaryColor,
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 60),
-              Row(
+    return Container(
+      color: Colors.white,
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.grey,
+                  width: 2.0,
+                )
+              )
+            ),
+            height: h * 0.3,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 30.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(width: 20),
-                  Text(
-                    'SEE IN',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ],
-              ),
-              SizedBox(height: 15),
-              Row(
-                children: [
-                  SizedBox(width: 20),
+                  SizedBox(height: h * 0.06),
+                  Icon(Icons.account_circle_outlined, size: w*0.15,),
+                  SizedBox(height: h * 0.01),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        _nickname,
-                        style: Theme.of(context).textTheme.labelLarge,
-                        textAlign: TextAlign.left,
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        _email,
-                        style: Theme.of(context).textTheme.labelLarge,
-                        textAlign: TextAlign.left,
-                      ),
+                      Text(_username, style: theme.textTheme.bodyMedium,),
+                      SizedBox(height: h * 0.001),
+                      Text(_email, style: theme.textTheme.labelSmall,)
                     ],
                   ),
                   if (!_isGuest) ...[
-                    SizedBox(width: 30),
-                    Column(
+                    Row(
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.pushReplacementNamed(context, RoutePage.myInfo);
+                            Navigator.pushNamed(ctx, RoutePage.myInfo);
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF2F3A8F),
-                            fixedSize: Size(110, 20),
+                          style: theme.elevatedButtonTheme.style?.copyWith(
+                            fixedSize: MaterialStateProperty.all(Size(w * 0.32, h * 0.0008)),
                           ),
                           child: Text(
                             '내 정보',
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
+                            style: theme.textTheme.labelLarge,),
                         ),
+                        SizedBox(width: w * 0.04,),
                         ElevatedButton(
                           onPressed: () {
-                            // userManager.clearUserData();
-                            // Navigator.pushReplacementNamed(context, RoutePage.start);
+                            userManager.clearUserData();
+                            Navigator.pushReplacementNamed(ctx, RoutePage.start);
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF2F3A8F),
-                            fixedSize: Size(110, 20),
+                          style: theme.elevatedButtonTheme.style?.copyWith(
+                            fixedSize: MaterialStateProperty.all(Size(w * 0.32, h * 0.0008)),
                           ),
                           child: Text(
                             '로그아웃',
-                            style: Theme.of(context).textTheme.labelLarge,
-                          ),
-                        ),
+                            style: theme.textTheme.labelLarge,),
+                        )
                       ],
                     ),
-                  ],
+                  ]
                 ],
               ),
-            ],
+            ),
+          ), // Header Container
+          SizedBox(height: h * 0.05),
+          ListTile(
+            // Route to Home
+            leading: Icon(Icons.home, size: w * 0.13),
+            title: Text('홈', style: Theme.of(ctx).textTheme.titleMedium),
+            onTap: () {
+              // 홈으로 이동
+              Navigator.pushReplacementNamed(ctx, RoutePage.home);
+            },
           ),
-        ), // Header Container
-        ListTile(
-          // Route to Home
-          leading: Icon(Icons.home, size: 40),
-          title: Text('홈', style: Theme.of(context).textTheme.titleMedium),
-          onTap: () {
-            // 홈으로 이동
-            Navigator.pushReplacementNamed(context, RoutePage.home);
-          },
-        ),
-        ListTile(
-          // Route to Camera
-          leading: Icon(Icons.camera_alt_rounded, size: 40),
-          title: Text('카메라', style: Theme.of(context).textTheme.titleMedium),
-          onTap: () {
-            // 앱 핵심 기능 카메라 페이지로 이동
-            // 페이지 추후 개발
-            Navigator.pop(context);
-            print("email: $_email          nickname: $_nickname");
-            if ((_email == "Non-Email" || _nickname == "비로그인 사용자") ||
-                (_email == "" || _nickname == "")) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.white,
-                      content: Text("로그인 후 이용하실 수 있습니다!"),
-                      duration: Duration(seconds: 1),
-                    ),
-                  )
-                  .closed
-                  .then((_) {
-                    // Navigator.pushReplacementNamed(context, RoutePage.start);
-                  });
-            } else {
-              Navigator.pushReplacementNamed(context, RoutePage.home);
-            }
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.menu_book_outlined, size: 40),
-          title: Text('사용 설명', style: Theme.of(context).textTheme.titleMedium),
-          onTap: () {
-            // 앱 사용 설명으로 이동
-            // 페이지 추후 개발
-            Navigator.pushReplacementNamed(context, RoutePage.start);
-          },
-        ),
-        ListTile(
-          // Route to Help
-          leading: Icon(Icons.help, size: 40),
-          title: Text('도움말', style: Theme.of(context).textTheme.titleMedium),
-          onTap: () {
-            // 도움말로 이동
-            // 페이지 추후 개발
-            Navigator.pushReplacementNamed(context, RoutePage.start);
-          },
-        ),
-      ], // Children End
+          SizedBox(height: h * 0.03),
+          ListTile(
+            // Route to Camera
+            leading: Icon(Icons.camera_alt_rounded, size: w * 0.13),
+            title: Text('카메라', style: Theme.of(ctx).textTheme.titleMedium),
+            onTap: () {
+              // 앱 핵심 기능 카메라 페이지로 이동
+              // 페이지 추후 개발
+              Navigator.pop(ctx);
+              if ((_email == "Non-Email" || _username == "비로그인 사용자") || (_email == "" || _username == "")) {
+                ScaffoldMessenger.of(ctx)
+                    .showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.white,
+                        content: Text("로그인 후 이용하실 수 있습니다!"),
+                        duration: Duration(seconds: 1),
+                      ),
+                    )
+                    .closed
+                    .then((_) {
+                      // Navigator.pushReplacementNamed(context, RoutePage.start);
+                    });
+              } else {
+                Navigator.pushReplacementNamed(ctx, RoutePage.home);
+              }
+            },
+          ),
+          SizedBox(height: h * 0.03),
+          ListTile(
+            leading: Icon(Icons.menu_book_outlined, size: w * 0.13),
+            title: Text('사용 설명', style: Theme.of(ctx).textTheme.titleMedium),
+            onTap: () {
+              // 앱 사용 설명으로 이동
+              // 페이지 추후 개발
+              Navigator.pushReplacementNamed(ctx, RoutePage.start);
+            },
+          ),
+          SizedBox(height: h * 0.03),
+          ListTile(
+            // Route to Help
+            leading: Icon(Icons.help, size: w * 0.13),
+            title: Text('도움말', style: Theme.of(ctx).textTheme.titleMedium),
+            onTap: () {
+              // 도움말로 이동
+              // 페이지 추후 개발
+              Navigator.pushReplacementNamed(ctx, RoutePage.start);
+            },
+          ),
+        ], // Children End
+      ),
     ); // ListView for Drawer
   }
 }

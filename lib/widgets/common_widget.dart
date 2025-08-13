@@ -55,6 +55,7 @@ class CommonWidget {
               final pwCheck = pwCheckController?.text.trim();
               final username = usernameController?.text.trim();
               final Regist registManager = Regist();
+              final Login loginMnager = Login();
               String contents = "";
               bool isValid = false;
               switch (label) {
@@ -66,7 +67,7 @@ class CommonWidget {
                     contents = "비밀번호를 입력해주세요";
                     break;
                   }
-                  await Login.login(ctx, email, pw, theme);
+                  await loginMnager.login(ctx, email, pw, theme);
                   isValid = true;
                   break;
                 case '회원가입':
