@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seein_frontend/screens/users/edit_profile_screen.dart';
 import '../screens/start_screen.dart';
 import '../screens/users/join_screen.dart';
 import '../screens/users/login_screen.dart';
@@ -7,6 +8,7 @@ import '../screens/select_home_screen.dart';
 import '../screens/users/my_info.dart';
 import '../screens/home_screen.dart';
 import '../screens/test_home_screen.dart';
+import '../screens/users/edit_profile_screen.dart';
 
 // 화면 전환 라우팅 등록
 class RoutePage {
@@ -19,6 +21,7 @@ class RoutePage {
   static const String myInfo = '/myInfo';
   static const String realHome = '/realHome';
   static const String receipt = '/receipt';
+  static const String editProfile = '/eiditProfile';
 
   // screens/...
   static final Map<String, WidgetBuilder> appRoutes = {
@@ -30,5 +33,6 @@ class RoutePage {
     myInfo: (context) => MyInfo(),
     realHome: (context) => Home(),
     receipt: (context) => HomeScreen(),
+    editProfile: (context) => EditProfileScreen(),
   };
 }

@@ -21,4 +21,10 @@ class UserProvider extends ChangeNotifier {
     username = null;
     notifyListeners();
   }
+
+  void updateUserData(String username, String email) {
+    this.email = email;
+    this.username = username;
+    notifyListeners();
+  }
 }
