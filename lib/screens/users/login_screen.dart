@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(width: w * 0.02),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(ctx, RoutePage.login);
+                  Navigator.pushNamed(ctx, '/resetPassword');
                 },
                 child: Text('비밀번호 찾기', style: theme.textTheme.bodyMedium,),
               )
