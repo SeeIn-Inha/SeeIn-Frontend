@@ -43,7 +43,7 @@ class Menu extends StatelessWidget {
             ),
             height: h * 0.3,
             child: Padding(
-              padding: const EdgeInsets.only(left: 30.0),
+              padding: const EdgeInsets.only(left: 25.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -66,20 +66,20 @@ class Menu extends StatelessWidget {
                             Navigator.pushNamed(ctx, RoutePage.myInfo);
                           },
                           style: theme.elevatedButtonTheme.style?.copyWith(
-                            fixedSize: MaterialStateProperty.all(Size(w * 0.32, h * 0.0008)),
+                            fixedSize: MaterialStateProperty.all(Size(w * 0.3, h * 0.02)),
                           ),
                           child: Text(
                             '내 정보',
                             style: theme.textTheme.labelLarge,),
                         ),
-                        SizedBox(width: w * 0.04,),
+                        SizedBox(width: w * 0.02,),
                         ElevatedButton(
                           onPressed: () {
                             userManager.clearUserData();
                             Navigator.pushReplacementNamed(ctx, RoutePage.start);
                           },
                           style: theme.elevatedButtonTheme.style?.copyWith(
-                            fixedSize: MaterialStateProperty.all(Size(w * 0.32, h * 0.0008)),
+                            fixedSize: MaterialStateProperty.all(Size(w * 0.3, h * 0.02)),
                           ),
                           child: Text(
                             '로그아웃',

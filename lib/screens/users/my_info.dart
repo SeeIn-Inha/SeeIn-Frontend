@@ -19,6 +19,9 @@ class MyInfo extends StatelessWidget {
     final theme = AppTheme.lightTheme;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text("내 정보")
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
