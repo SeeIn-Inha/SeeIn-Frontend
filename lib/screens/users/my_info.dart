@@ -3,10 +3,13 @@ import 'package:provider/provider.dart';
 import '../../services/user_provider.dart';
 import '../../widgets/common_widget.dart';
 import '../../config/appTheme.dart';
+import '../../api/user/delete_account_api.dart';
+import '../../services/auth_provider.dart';
 
 class MyInfo extends StatelessWidget {
   @override
   Widget build(BuildContext ctx) {
+    CommonWidget widgetMaker = CommonWidget();
     final UserProvider userManager = ctx.read<UserProvider>();
     final String email = userManager.email!;
     final String username = userManager.username!;
@@ -22,11 +25,8 @@ class MyInfo extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(height: h * 0.2,),
-              // 프로필 이미지
               Icon(Icons.account_circle, size: w * 0.4),
               SizedBox(height: 20),
-
-              // 닉네임 / 이메일 카드
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.all(16.0),
@@ -52,6 +52,7 @@ class MyInfo extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () {
                       // 내 정보 수정 스크린으로 이동
+                      Navigator.pushNamed(ctx, '/eiditProfile');
                     },
                     style: ElevatedButton.styleFrom(
                       fixedSize: Size(w * 0.4, h * 0.04),
@@ -75,10 +76,19 @@ class MyInfo extends StatelessWidget {
                                 child: Text('아니오'),
                               ),
                               TextButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   // 회원 탈퇴 로직 추가 해야함
-                                  final UserProvider userManager = ctx.read<UserProvider>();
+                                  final AuthProvider authManager = ctx.read<AuthProvider>();
+                                  DeleteAccount accountManager = DeleteAccount();
+
+                                  if (!await accountManager.deleteAccount(authManager.token!, userManager.email!, userManager.username!)) {
+                                    widgetMaker.buildSnackBar(context, "회원 탈퇴를 진행하지 못 하였습니다!", theme);
+                                    Navigator.of(context).pop();
+                                    return;
+                                  }
+
                                   userManager.clearUserData();
+                                  widgetMaker.buildSnackBar(context, "회원 탈퇴를 성공하였습니다", theme);
                                   Navigator.of(context).pop();
                                   Navigator.pushReplacementNamed(ctx, '/start');
                                 },
