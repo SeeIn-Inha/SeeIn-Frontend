@@ -28,7 +28,6 @@ class _CameraAutoAnalysisScreenState extends State<CameraAutoAnalysisScreen> {
       _result = "서버에 분석 요청 중...";
     });
 
-    // 분석 요청 (압축 없이 바로)
     final result = await ReceiptApiClient.analyzeReceipt(image: photo);
 
     setState(() {
@@ -40,22 +39,50 @@ class _CameraAutoAnalysisScreenState extends State<CameraAutoAnalysisScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("카메라 촬영 자동 분석")),
+      backgroundColor: const Color(0xFFFAFAFF),
+      appBar: AppBar(
+        title: const Text("영수증 자동 분석"),
+        backgroundColor: const Color(0xFF9C89FF),
+        foregroundColor: Colors.white,
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
             ElevatedButton.icon(
               onPressed: _loading ? null : _captureAndAnalyze,
               icon: const Icon(Icons.camera_alt),
               label: const Text("📸 촬영 후 자동 분석"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF9C89FF),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            const Divider(thickness: 1.2),
+            const SizedBox(height: 20),
+            const Text(
+              "분석 결과",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Expanded(
               child: SingleChildScrollView(
-                child: Text(
-                  _result,
-                  style: const TextStyle(fontSize: 16),
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Text(
+                      _result,
+                      style: const TextStyle(fontSize: 16, height: 1.5),
+                    ),
+                  ),
                 ),
               ),
             ),
