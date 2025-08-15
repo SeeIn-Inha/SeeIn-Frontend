@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:seein_frontend/services/tts_service.dart';
 
 ///  상품 분석 및 추천 화면
 /// - 이미지 업로드 → FastAPI 서버에서 상품 분석 및 요약 결과 받기
@@ -63,6 +65,10 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
 ''';
             _isAnalyzed = true;
           });
+
+          // OCR 결과를 줄 단위 리스트로 만들어서 TtsService에 전달
+          final ocrLines = _resultText.split('\n').where((line) => line.trim().isNotEmpty).toList();
+          TtsService().setOcrResults(ocrLines);
 
           _showSnackbar('상품 분석 성공!');
         } else {
@@ -224,6 +230,16 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
                             },
                           ),
                         ),
+                      const SizedBox(height: 10),
+
+                      // 🔊 분석 결과 음성 안내 버튼
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.volume_up),
+                        label: const Text('분석 결과 읽어주기'),
+                        onPressed: () {
+                          TtsService().readOcrResults();
+                        },
+                      ),
                     ],
                   ),
                 ),
