@@ -3,8 +3,8 @@ import 'package:flutter_tts/flutter_tts.dart';
 class TtsService {
   // tts 인스턴스 생성
   final FlutterTts _flutterTts = FlutterTts();
-
-  TtsService();
+  // OCR 결과를 저장할 리스트 추가
+  List<String> _ocrResults = [];
 
   // 기본 설정으로 초기화 (앱 시작 시 한 번 호출하기)
   Future<void> init() async {
@@ -48,6 +48,27 @@ class TtsService {
   Future<void> stop() async {
     await _flutterTts.stop();
   }
+
+  // OCR 결과 저장 함수
+  void setOcrResults(List<String> results) {
+    _ocrResults = results; // OCR에서 인식한 텍스트들을 저장
+  }
+
+  // OCR 결과를 읽어주는 함수
+  Future<void> readOcrResults() async {
+    if (_ocrResults.isEmpty) {
+      // OCR 결과가 없으면 안내 멘트
+      await speak("아직 분석된 결과가 없습니다.");
+      return;
+    }
+
+    // OCR 결과를 한 줄씩 읽음
+    for (var line in _ocrResults) {
+      await speak(line);
+      await Future.delayed(const Duration(milliseconds: 800)); // 문장 간 텀
+    }
+  }
+
 
   /* 음성 설정 setVoice
 	영어 여성 {"name": "en-us-x-tpf-local", "locale": "en-US"}
