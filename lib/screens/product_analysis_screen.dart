@@ -1,15 +1,12 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
-///  상품 분석 및 추천 화면
-/// - 이미지 업로드 → FastAPI 서버에서 상품 분석 및 요약 결과 받기
-/// - 분석 결과 기반으로 '살까 말까' 추천까지 제공
 class ProductAnalysisScreen extends StatefulWidget {
-  final XFile? image; // 카메라 촬영 후 전달받는 이미지 (선택사항)
+  final XFile? image;
 
   const ProductAnalysisScreen({super.key, this.image});
 
@@ -20,10 +17,7 @@ class ProductAnalysisScreen extends StatefulWidget {
 class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
   final ImagePicker _picker = ImagePicker();
 
-  // 분석 결과 텍스트
   String _resultText = '아직 분석된 결과가 없습니다.';
-
-  // 분석 완료 여부
   bool _isAnalyzed = false;
 
   @override
@@ -34,7 +28,6 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
     }
   }
 
-  ///  이미지 업로드 → 서버 분석 요청
   Future<void> _analyzeImageWithAPI(XFile image) async {
     setState(() {
       _resultText = '서버에 이미지 업로드 중...';
@@ -76,7 +69,6 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
     }
   }
 
-  ///  이미지 선택 (카메라 or 갤러리)
   Future<void> _pickImage(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(source: source);
 
@@ -88,7 +80,6 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
     await _analyzeImageWithAPI(pickedFile);
   }
 
-  ///  추천 요청 → 분석된 상품 정보로 POST 요청
   Future<void> _fetchRecommendation(String name, String brand, String summary) async {
     final uri = Uri.parse('${dotenv.env['API_BASE_URL']}/recommend-product/');
     final headers = {'Content-Type': 'application/json'};
@@ -120,7 +111,6 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
     }
   }
 
-  ///  분석 텍스트에서 상품명, 브랜드, 요약 추출 (정규식 기반)
   Map<String, String>? _extractProductInfo(String text) {
     final nameMatch = RegExp(r'상품명:\s(.+)').firstMatch(text);
     final brandMatch = RegExp(r'브랜드:\s(.+)').firstMatch(text);
@@ -137,12 +127,10 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
     return null;
   }
 
-  ///  스낵바로 사용자에게 피드백 메시지 출력
   void _showSnackbar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  ///  에러 메시지 세팅 + 스낵바 출력
   void _setError(String message) {
     setState(() {
       _resultText = message;
@@ -151,80 +139,91 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
     _showSnackbar(message);
   }
 
-  ///  UI 구성
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('상품 분석 및 추천')),
+      backgroundColor: const Color(0xFFFAFAFF),
+      appBar: AppBar(
+        title: const Text('상품 분석 및 추천'),
+        backgroundColor: const Color(0xFF9C89FF),
+        foregroundColor: Colors.white,
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            // 📷 이미지 선택 버튼 (카메라/갤러리)
+            // 상단 버튼
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.photo),
-                  label: const Text('갤러리에서 분석'),
+                _buildActionButton(
+                  icon: Icons.image,
+                  label: '갤러리에서 분석',
                   onPressed: () => _pickImage(ImageSource.gallery),
                 ),
-                ElevatedButton.icon(
-                  icon: const Icon(Icons.camera_alt),
-                  label: const Text('카메라 촬영'),
+                _buildActionButton(
+                  icon: Icons.camera_alt,
+                  label: '카메라 촬영',
                   onPressed: () => _pickImage(ImageSource.camera),
                 ),
               ],
             ),
-            const SizedBox(height: 24),
-            const Divider(),
-            const SizedBox(height: 10),
+            const SizedBox(height: 30),
+            const Divider(thickness: 1.2),
+            const SizedBox(height: 20),
             const Text(
               '분석 결과',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
-
-            // 📋 결과 출력 영역
+            const SizedBox(height: 20),
+            // 결과 박스
             Expanded(
               child: SingleChildScrollView(
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _resultText,
-                        style: const TextStyle(fontSize: 16, fontFamily: 'monospace'),
-                      ),
-                      // 💡 분석이 완료된 경우에만 추천 버튼 표시
-                      if (_isAnalyzed)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20),
-                          child: ElevatedButton.icon(
-                            icon: const Icon(Icons.help_outline),
-                            label: const Text('살까 말까?'),
-                            onPressed: () {
-                              final productInfo = _extractProductInfo(_resultText);
-                              if (productInfo != null) {
-                                _fetchRecommendation(
-                                  productInfo['name']!,
-                                  productInfo['brand']!,
-                                  productInfo['summary']!,
-                                );
-                              } else {
-                                _showSnackbar('상품 정보를 찾을 수 없습니다.');
-                              }
-                            },
-                          ),
+                child: Card(
+                  elevation: 3,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _resultText,
+                          style: const TextStyle(fontSize: 16, height: 1.4),
                         ),
-                    ],
+                        if (_isAnalyzed)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 24),
+                            child: Center(
+                              child: ElevatedButton.icon(
+                                icon: const Icon(Icons.help_outline),
+                                label: const Text('살까 말까?'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF9C89FF),
+                                  foregroundColor: Colors.white,
+                                  textStyle: const TextStyle(fontWeight: FontWeight.w600),
+                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  final productInfo = _extractProductInfo(_resultText);
+                                  if (productInfo != null) {
+                                    _fetchRecommendation(
+                                      productInfo['name']!,
+                                      productInfo['brand']!,
+                                      productInfo['summary']!,
+                                    );
+                                  } else {
+                                    _showSnackbar('상품 정보를 찾을 수 없습니다.');
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -232,6 +231,28 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  /// 공통 버튼 스타일 위젯
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return ElevatedButton.icon(
+      icon: Icon(icon, size: 20),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF9C89FF),
+        foregroundColor: Colors.white,
+        textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      onPressed: onPressed,
     );
   }
 }
