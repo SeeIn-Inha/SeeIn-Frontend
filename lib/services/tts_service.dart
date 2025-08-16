@@ -1,6 +1,13 @@
 import 'package:flutter_tts/flutter_tts.dart';
 
 class TtsService {
+  // TtsService가 앱 전체에서 단일 인스턴스로 사용되도록 수정
+  static final TtsService _instance = TtsService._internal();
+  factory TtsService() {
+    return _instance;
+  }
+  TtsService._internal();
+
   // tts 인스턴스 생성
   final FlutterTts _flutterTts = FlutterTts();
   // OCR 결과를 저장할 리스트 추가
@@ -62,8 +69,10 @@ class TtsService {
       return;
     }
 
-    // OCR 결과를 한 줄씩 읽음
+    // 각 줄을 읽기 전에 한국어 음성으로 명시적 설정
     for (var line in _ocrResults) {
+      await _flutterTts.setLanguage("ko-KR");
+      await _flutterTts.setVoice({"name": "ko-kr-x-ism-local", "locale": "ko-KR"});
       await speak(line);
       await Future.delayed(const Duration(milliseconds: 800)); // 문장 간 텀
     }
