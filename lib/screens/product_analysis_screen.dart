@@ -28,6 +28,10 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
   // 분석 완료 여부
   bool _isAnalyzed = false;
 
+  // ✅ [MODIFIED] 추천 완료 여부 및 결과 저장을 위한 상태 변수 추가
+  bool _isRecommendationFetched = false;
+  String _recommendationResult = '';
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +45,7 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
     setState(() {
       _resultText = '서버에 이미지 업로드 중...';
       _isAnalyzed = false;
+      _isRecommendationFetched = false; // 새로운 이미지 분석 시 추천 상태 초기화
     });
 
     final uri = Uri.parse('${dotenv.env['API_BASE_URL']}/analyze-and-recommend-product/');
@@ -66,8 +71,19 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
             _isAnalyzed = true;
           });
 
-          // OCR 결과를 줄 단위 리스트로 만들어서 TtsService에 전달
-          final ocrLines = _resultText.split('\n').where((line) => line.trim().isNotEmpty).toList();
+          // TTS가 "분석 완료"를 읽지 않도록 수정하고, 각 라벨과 값을 분리하여 읽도록 처리
+          final ocrLines = _resultText
+              .split('\n')
+              .where((line) => line.trim().isNotEmpty && !line.contains('✅'))
+              .expand((line) {
+                if (line.contains(':')) {
+                  final parts = line.split(':');
+                  return [parts[0], parts[1].trim()];
+                } else {
+                  return [line];
+                }
+              })
+              .toList();
           TtsService().setOcrResults(ocrLines);
 
           _showSnackbar('상품 분석 성공!');
@@ -112,9 +128,14 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
         final result = data['result'];
 
         if (result != null) {
+          // 추천 결과를 상태에 저장하고, 버튼 상태 변경을 위해 setState 호출
           setState(() {
             _resultText += '\n\n💡 추천 결과\n$result';
+            _recommendationResult = result;
+            _isRecommendationFetched = true;
           });
+          // 추천 결과를 바로 음성으로 읽어주도록 수정
+          TtsService().speak(result);
         } else {
           _showSnackbar('추천 결과가 없습니다.');
         }
@@ -209,37 +230,54 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
                         _resultText,
                         style: const TextStyle(fontSize: 16, fontFamily: 'monospace'),
                       ),
-                      // 💡 분석이 완료된 경우에만 추천 버튼 표시
+                      /* 버튼 UI 관련 수정
+                      1. 분석이 완료된 경우에만 버튼들이 보이도록 수정
+                      2. 버튼 순서를 "분석 결과 읽어주기" -> "살까 말까?" 순으로 변경
+                      3. "살까 말까?" 버튼을 누르면 "추천 결과 읽어주기" 버튼으로 바뀌도록 수정
+                       */
                       if (_isAnalyzed)
                         Padding(
                           padding: const EdgeInsets.only(top: 20),
-                          child: ElevatedButton.icon(
-                            icon: const Icon(Icons.help_outline),
-                            label: const Text('살까 말까?'),
-                            onPressed: () {
-                              final productInfo = _extractProductInfo(_resultText);
-                              if (productInfo != null) {
-                                _fetchRecommendation(
-                                  productInfo['name']!,
-                                  productInfo['brand']!,
-                                  productInfo['summary']!,
-                                );
-                              } else {
-                                _showSnackbar('상품 정보를 찾을 수 없습니다.');
-                              }
-                            },
+                          child: Wrap(
+                            alignment: WrapAlignment.end,
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: [
+                              ElevatedButton.icon(
+                                icon: const Icon(Icons.volume_up),
+                                label: const Text('분석 결과 읽어주기'),
+                                onPressed: () {
+                                  TtsService().readOcrResults();
+                                },
+                              ),
+                              if (!_isRecommendationFetched)
+                                ElevatedButton.icon(
+                                  icon: const Icon(Icons.help_outline),
+                                  label: const Text('살까 말까?'),
+                                  onPressed: () {
+                                    final productInfo = _extractProductInfo(_resultText);
+                                    if (productInfo != null) {
+                                      _fetchRecommendation(
+                                        productInfo['name']!,
+                                        productInfo['brand']!,
+                                        productInfo['summary']!,
+                                      );
+                                    } else {
+                                      _showSnackbar('상품 정보를 찾을 수 없습니다.');
+                                    }
+                                  },
+                                )
+                              else
+                                ElevatedButton.icon(
+                                  icon: const Icon(Icons.volume_up),
+                                  label: const Text('추천 결과 읽어주기'),
+                                  onPressed: () {
+                                    TtsService().speak(_recommendationResult);
+                                  },
+                                ),
+                            ],
                           ),
                         ),
-                      const SizedBox(height: 10),
-
-                      // 🔊 분석 결과 음성 안내 버튼
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.volume_up),
-                        label: const Text('분석 결과 읽어주기'),
-                        onPressed: () {
-                          TtsService().readOcrResults();
-                        },
-                      ),
                     ],
                   ),
                 ),
