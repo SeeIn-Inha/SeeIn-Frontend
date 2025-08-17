@@ -5,7 +5,7 @@ import 'package:seein_frontend/screens/select_home_screen.dart';
 import 'routes/router.dart';
 import 'services/auth_provider.dart';
 import 'services/user_provider.dart';
-// screen참고 testhome =영수증, product_analysis가 상품분석. select home임의로 만들어놓음.
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
@@ -46,7 +46,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      // home: const SelectHomeScreen(),
       initialRoute: RoutePage.start,
       routes: RoutePage.appRoutes,
     );
