@@ -6,11 +6,10 @@ final String baseUrl = dotenv.env['API_BASE_URL'] ?? 'http://localhost:8000';
 
 class Regist_API {
   Future<Map<String, dynamic?>> register({
-    required String username,
+    required String nick,
     required String pw,
     required String email,
   }) async {
-    print("회원 가입 요청 테스트");
     final uri = Uri.parse('$baseUrl/auth/register');
     final res = await http.post(
         uri,
@@ -18,7 +17,7 @@ class Regist_API {
         body: json.encode({
           'email': email,
           'password': pw,
-          'username': username,
+          'username': nick,
         })
     );
 
@@ -38,7 +37,7 @@ class Regist_API {
         });
     }
 
-    return result;
+    return result!;
   }
 
 }

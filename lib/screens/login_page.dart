@@ -5,6 +5,7 @@ import 'package:text_divider/text_divider.dart';
 import '../api/user/login_api.dart';
 import '../services/auth_provider.dart';
 import '../routes/router.dart';
+import '../api/user/fetch_my_info.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -184,13 +185,14 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                       child: ElevatedButton(
                         onPressed: () async {
-                          final authManager = Provider.of<AuthProvider>(context, listen: false);
+                          final authManager = context.read<AuthProvider>();
 
                           if (authManager.isTokenValid) { // 유효 토큰 시에 홈 화면 이동
                             print("유효 토큰");
-
+                            Navigator.pushReplacementNamed(context, RoutePage.home);
                           } else {
                             print("토큰 기간 만료");
+                            authManager.clearToken();
                           }
 
                           Login_API loginManager = Login_API();
@@ -214,6 +216,8 @@ class _LoginPageState extends State<LoginPage> {
                             // JWT 토큰 저장 및 홈 화면 이동
                             // await authManager.saveToken(result["access_token"], result["expire"]);
                             await authManager.saveToken(result["access_token"]);
+                            FetchMyInfo_API myInfoAPI = FetchMyInfo_API();
+                            await myInfoAPI.fetchMyInfo(context);
                             Navigator.pushReplacementNamed(context, RoutePage.home);
                           });
                         },
