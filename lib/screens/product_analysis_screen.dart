@@ -28,7 +28,7 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
   // 분석 완료 여부
   bool _isAnalyzed = false;
 
-  // ✅ [MODIFIED] 추천 완료 여부 및 결과 저장을 위한 상태 변수 추가
+  // 추천 완료 여부 및 결과 저장을 위한 상태 변수 추가
   bool _isRecommendationFetched = false;
   String _recommendationResult = '';
 
