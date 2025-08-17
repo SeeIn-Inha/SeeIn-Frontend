@@ -10,6 +10,7 @@ class Regist_API {
     required String pw,
     required String email,
   }) async {
+    print("회원 가입 요청 테스트");
     final uri = Uri.parse('$baseUrl/auth/register');
     final res = await http.post(
         uri,
