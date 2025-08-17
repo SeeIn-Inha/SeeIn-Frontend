@@ -48,6 +48,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: RoutePage.start,
       routes: RoutePage.appRoutes,
+      home: const SelectHomeScreen(),
     );
   }
 }
