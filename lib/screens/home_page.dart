@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../routes/router.dart';
+import '../widgets/drawer_widget.dart';
 import '../services/auth_provider.dart';
 import '../services/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -16,8 +17,13 @@ class StartScreen extends StatelessWidget {
     final h = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      body: _buildVerticalLayout(context, w, h, theme)
+        backgroundColor: theme.scaffoldBackgroundColor,
+        appBar: AppBar( // 여기에 AppBar 위젯을 추가하세요.
+          title: Text('홈페이지'),
+          backgroundColor: Colors.blue,
+          // 필요한 다른 속성들을 여기에 추가할 수 있습니다.
+        ),
+        body: _buildVerticalLayout(context, w, h, theme)
     );
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:seein_frontend/services/tts_service.dart';
+import '../widgets/drawer_widget.dart';
 import 'package:http/http.dart' as http;
 
 class ProductAnalysisScreen extends StatefulWidget {

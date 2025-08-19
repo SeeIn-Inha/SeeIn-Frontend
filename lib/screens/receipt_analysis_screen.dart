@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:seein_frontend/api/receipt/test_receipt_api.dart';
 import 'package:seein_frontend/services/tts_service.dart'; // TtsService 임포트
+import '../widgets/drawer_widget.dart';
 import 'dart:convert';
 
 // 클래스 이름을 파일 이름에 맞춰 'ReceiptAnalysisScreen'으로 변경합니다.
