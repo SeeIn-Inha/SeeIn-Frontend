@@ -14,15 +14,19 @@ class AuthProvider extends ChangeNotifier {
     return DateTime.now().isBefore(_expiry!);
   }
 
-  void clearToken() async {
-    _token = null;
-    _expiry = null;
+  // 이 부분을 추가하세요.
+  bool get isFirstLogin {
+    // 저장된 토큰이 없으면 첫 로그인으로 판단합니다.
+    return _token == null;
+  }
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-    await prefs.remove('token_expiry');
-
-    notifyListeners();
+  // 이 부분을 추가하세요.
+  bool get isTokenExpired {
+    // 토큰이 없거나 만료되었으면 true를 반환합니다.
+    if (_token == null || _expiry == null) {
+      return true;
+    }
+    return DateTime.now().isAfter(_expiry!);
   }
 
   Future<void> loadToken() async {
@@ -48,6 +52,17 @@ class AuthProvider extends ChangeNotifier {
     print("토큰 저장 완료");
     print("토큰: " + prefs.getString('token').toString());
     // print("유효기간: " + prefs.getString('token_expiry').toString());
+    notifyListeners();
+  }
+
+  void clearToken() async {
+    _token = null;
+    _expiry = null;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    await prefs.remove('token_expiry');
+
     notifyListeners();
   }
 }

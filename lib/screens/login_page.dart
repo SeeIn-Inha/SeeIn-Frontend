@@ -1,13 +1,17 @@
+// C:\Seein\SeeIn-Frontend\lib\screens\login_page.dart
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/drawer_widget.dart';
+import '../widgets/drawer_widget.dart';
 import 'package:text_divider/text_divider.dart';
-import '../../api/user/login_api.dart';
-import '../../services/auth_provider.dart';
-import '../../routes/router.dart';
-import '../../api/user/fetch_my_info.dart';
+import '../api/user/login_api.dart';
+import '../services/auth_provider.dart';
+import '../routes/router.dart';
+import '../api/user/fetch_my_info.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -30,33 +34,31 @@ class _LoginPageState extends State<LoginPage> {
         _pwFocused = _pwFocus.hasFocus;
       });
     });
-
   }
 
   @override
   void dispose() {
+    _pw.dispose();
+    _email.dispose();
     _pwFocus.dispose();
     super.dispose();
   }
 
-  void makeSnackBar(BuildContext context, String target) {
+  void _showSnackbar(BuildContext context, String target) {
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.white,
-          content: Text(
-            target,
-            style: Theme.of(context).textTheme.bodyMedium,),
-        )
+      SnackBar(
+        backgroundColor: Colors.white,
+        content: Text(
+          target,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD:lib/screens/login_page.dart
-    final mainState = Provider.of<MainAppContext>(context);
-=======
-    final mainState = Provider.of<AuthProvider>(context);
->>>>>>> e21ca0b (feat: 일반 로그인):lib/screens/login_screen.dart
+    final authManager = Provider.of<AuthProvider>(context);
 
     return Scaffold(
         appBar: AppBar(
@@ -187,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () async {
                           final authManager = context.read<AuthProvider>();
 
-                          if (authManager.isTokenValid) { // 유효 토큰 시에 홈 화면 이동
+                          if (authManager.isTokenValid) {
                             print("유효 토큰");
                             Navigator.pushReplacementNamed(context, RoutePage.home);
                           } else {
@@ -199,7 +201,8 @@ class _LoginPageState extends State<LoginPage> {
                           Map<String, dynamic> result = await loginManager.login(email: _email.text, pw: _pw.text);
 
                           if (result["success"] == false) {
-                            makeSnackBar(context, result["body"]);
+                            // 이 부분을 아래와 같이 수정하세요.
+                            _showSnackbar(context, result["body"]);
                             return;
                           }
 
@@ -213,8 +216,6 @@ class _LoginPageState extends State<LoginPage> {
                               .then((_) async {
                             _pw.clear();
                             _email.clear();
-                            // JWT 토큰 저장 및 홈 화면 이동
-                            // await authManager.saveToken(result["access_token"], result["expire"]);
                             await authManager.saveToken(result["access_token"]);
                             FetchMyInfo_API myInfoAPI = FetchMyInfo_API();
                             await myInfoAPI.fetchMyInfo(context);

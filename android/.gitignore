@@ -1,14 +1,25 @@
-gradle-wrapper.jar
-/.gradle
+# Gradle 관련 파일
+.gradle/
+build/
+local.properties
 /captures/
-/gradlew
-/gradlew.bat
-/local.properties
-GeneratedPluginRegistrant.java
 .cxx/
 
-# Remember to never publicly share your keystore.
-# See https://flutter.dev/to/reference-keystore
+# Gradle Wrapper 스크립트는 Git에 포함
+# gradle/
+# gradlew
+# gradlew.bat
+
+# 보안 파일
 key.properties
 **/*.keystore
 **/*.jks
+.env
+
+# IDE 설정 파일
+.idea/
+.vscode/
+
+# 운영체제 관련 파일
+.DS_Store
+Thumbs.db

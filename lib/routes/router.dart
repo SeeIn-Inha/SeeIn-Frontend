@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:seein_frontend/screens/users/reset_password_screen.dart';
 import '../screens/start_screen.dart';
 import '../screens/users/join_screen.dart';
@@ -6,7 +7,7 @@ import '../screens/camera_auto_analysis_screen.dart';
 import '../screens/select_home_screen.dart';
 import '../screens/users/my_info_screen.dart';
 import '../screens/home_screen.dart';
-import '../screens/test_home_screen.dart';
+import '../screens/receipt_analysis_screen.dart';
 import '../screens/users/edit_profile_screen.dart';
 
 // 화면 전환 라우팅 등록
@@ -32,6 +33,8 @@ class RoutePage {
     login: (context) => LoginPage(),
     myInfo: (context) => MyInfo(),
     realHome: (context) => Home(),
-    receipt: (context) => HomeScreen(),
+    receipt: (context) => ReceiptAnalysisScreen(),
     editProfile: (context) => EditProfileScreen(),
     resetPassword: (context) => ResetPassword(),
+  };
+}
