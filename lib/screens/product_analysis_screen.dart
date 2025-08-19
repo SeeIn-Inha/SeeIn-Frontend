@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:seein_frontend/services/tts_service.dart';
 import 'package:http/http.dart' as http;
 
 class ProductAnalysisScreen extends StatefulWidget {
@@ -16,8 +17,10 @@ class ProductAnalysisScreen extends StatefulWidget {
 
 class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
   final ImagePicker _picker = ImagePicker();
+  final TtsService _ttsService = TtsService();
 
   String _resultText = '아직 분석된 결과가 없습니다.';
+  String _ttsText = '';
   bool _isAnalyzed = false;
 
   @override
@@ -47,13 +50,17 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
         if (data['success'] == true) {
           final product = data['product'];
 
-          setState(() {
-            _resultText = '''
+          final screenText = '''
 ✅ 분석 완료
 상품명: ${product['name']}
 브랜드: ${product['brand']}
 요약: ${product['summary']}
 ''';
+          final ttsText = '분석 완료. 상품명: ${product['name']}. 브랜드: ${product['brand']}. 요약: ${product['summary']}.';
+
+          setState(() {
+            _resultText = screenText;
+            _ttsText = ttsText;
             _isAnalyzed = true;
           });
 
@@ -99,7 +106,9 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
         if (result != null) {
           setState(() {
             _resultText += '\n\n💡 추천 결과\n$result';
+            _ttsText += '추천 결과: $result.';
           });
+          _ttsService.speak('추천 결과가 도착했습니다. $result');
         } else {
           _showSnackbar('추천 결과가 없습니다.');
         }
@@ -152,19 +161,18 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            // 상단 버튼
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildActionButton(
                   icon: Icons.image,
                   label: '갤러리에서 분석',
-                  onPressed: () => _pickImage(ImageSource.gallery),
+                  onPressed: _isAnalyzed ? null : () => _pickImage(ImageSource.gallery),
                 ),
                 _buildActionButton(
                   icon: Icons.camera_alt,
                   label: '카메라 촬영',
-                  onPressed: () => _pickImage(ImageSource.camera),
+                  onPressed: _isAnalyzed ? null : () => _pickImage(ImageSource.camera),
                 ),
               ],
             ),
@@ -176,7 +184,6 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            // 결과 박스
             Expanded(
               child: SingleChildScrollView(
                 child: Card(
@@ -228,23 +235,40 @@ class _ProductAnalysisScreenState extends State<ProductAnalysisScreen> {
                 ),
               ),
             ),
+            // --- '음성 안내' 버튼 추가 ---
+            if (_isAnalyzed)
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    // _ttsService 인스턴스를 통해 음성 안내를 실행합니다.
+                    _ttsService.speak(_ttsText);
+                  },
+                  icon: const Icon(Icons.volume_up),
+                  label: const Text('음성 안내'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple,
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
     );
   }
 
-  /// 공통 버튼 스타일 위젯
   Widget _buildActionButton({
     required IconData icon,
     required String label,
-    required VoidCallback onPressed,
+    required VoidCallback? onPressed,
   }) {
     return ElevatedButton.icon(
       icon: Icon(icon, size: 20),
       label: Text(label),
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF9C89FF),
+        backgroundColor: onPressed == null ? Colors.grey : const Color(0xFF9C89FF),
         foregroundColor: Colors.white,
         textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),

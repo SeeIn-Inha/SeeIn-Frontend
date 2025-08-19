@@ -46,9 +46,9 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: RoutePage.start,
-      routes: RoutePage.appRoutes,
-      home: const SelectHomeScreen(),
+      initialRoute: RoutePage.start,  // ✅ 앱 시작 루트
+      routes: RoutePage.appRoutes,    // ✅ 모든 라우트 관리
     );
+
   }
 }

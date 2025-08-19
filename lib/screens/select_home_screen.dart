@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seein_frontend/screens/product_analysis_screen.dart';
-import 'package:seein_frontend/screens/test_home_screen.dart'; // HomeScreen 정의된 곳
+import 'package:seein_frontend/screens/receipt_analysis_screen.dart'; // HomeScreen 정의된 곳
 
 class SelectHomeScreen extends StatelessWidget {
   const SelectHomeScreen({super.key});
@@ -77,7 +77,7 @@ class SelectHomeScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const HomeScreen()),
+                      MaterialPageRoute(builder: (_) => const ReceiptAnalysisScreen()),
                     );
                   },
                 ),
